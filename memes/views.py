@@ -122,10 +122,12 @@ class UpdateMem(LoginRequiredMixin, DataMixin, UpdateView):
     form_class = UpdateMemesForm
     template_name = 'memsite/addmem.html'
     login_url = '/admin/'
+    slug_field = 'slug'
+    slug_url_kwarg = 'mem_slug'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        c_def = self.get_user_context(title='Редактировать мем', update_mode=True)
+        c_def = self.get_user_context(title='Редактировать мем', update_mode=True, meme=self.get_object())
         return dict(list(context.items()) + list(c_def.items()))
 
     def form_valid(self, form):
