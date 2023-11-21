@@ -4,10 +4,10 @@ from django.contrib.auth.views import LoginView
 from django.http import Http404
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, FormView
+from django.views.generic import ListView, DetailView, CreateView, FormView, UpdateView
 from django.views.generic.base import View
 
-from .form import CommentsForm, AddMemForm, RegisterUserForm, LoginUserForm, ContactForm
+from .form import CommentsForm, AddMemForm, RegisterUserForm, LoginUserForm, ContactForm, UpdateMemesForm
 from .models import Memes, Category
 from .utils import DataMixin
 
@@ -109,8 +109,29 @@ class AddMem(LoginRequiredMixin, DataMixin, CreateView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        c_def = self.get_user_context(title='Добавить мем')
+        c_def = self.get_user_context(title='Добавить мем', update_mode=False)
         return dict(list(context.items()) + list(c_def.items()))
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+
+class UpdateMem(LoginRequiredMixin, DataMixin, UpdateView):
+    model = Memes
+    form_class = UpdateMemesForm
+    template_name = 'memsite/addmem.html'
+    login_url = '/admin/'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title='Редактировать мем', update_mode=True)
+        return dict(list(context.items()) + list(c_def.items()))
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
 
 class RegisterUser(DataMixin, CreateView):
     form_class = RegisterUserForm
@@ -119,7 +140,7 @@ class RegisterUser(DataMixin, CreateView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        c_def = self.get_user_context(title='Регистрация')
+        c_def = self.get_user_context(title='Регистрация', update_mode=True)
         return dict(list(context.items()) + list(c_def.items()))
 
     def form_valid(self, form):

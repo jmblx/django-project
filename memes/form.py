@@ -23,6 +23,27 @@ class AddMemForm(forms.ModelForm):
             'name': forms.TextInput(attrs={'class': 'form-comment'}),
         }
 
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+class UpdateMemesForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['cat'].empty_label = "Категория не выбрана"
+
+    class Meta:
+        model = Memes
+        fields = ['name', 'date', 'cat', 'img', 'author', 'slug']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-comment'}),
+        }
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+
 
 class RegisterUserForm(UserCreationForm):
     username = forms.CharField(label='Логин', widget=forms.TextInput(attrs={'class': 'form-input'}))
