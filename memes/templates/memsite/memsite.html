@@ -1,0 +1,22 @@
+{% extends 'memsite/base.html' %}
+{% block content %}
+
+<div class="projects">
+					<h3>Мемы</h3>
+					{% for mem in object_list %}
+					<h1><a href="{{ mem.get_absolute_url }}">{{ mem.name }}</a></h1>
+					<div class="item">
+						<div class="image left">
+							<a href="#"><img src="{{ mem.img.url }}" width="250px" /></a>
+							<h3>{{ mem.date }}</h3>
+						</div>
+						<div class="cl">&nbsp;</div>
+					</form>
+					</div>
+					</div>
+					<br>
+					<br>
+					<br>
+					<br>
+					{% endfor %}
+{% endblock %}

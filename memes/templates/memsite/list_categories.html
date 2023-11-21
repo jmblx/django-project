@@ -1,0 +1,37 @@
+{% load mem_tags %}
+{% load static %}
+
+		<div id="navigation">
+			<ul>
+				<li><a href="/">Главная</a></li>
+			    <li><a href="/admin">Админ панель</a></li>
+				<div>
+				<ul class='dropdown'>
+					{% get_categories as categories %}
+		     		<li id="top"><a>Категории мемов</a>
+		     			<span></span>
+						<div id="navi">
+		        		<ul class="dropdown-box">
+						{% for c in categories %}
+						{% if c.pk == cat_selected %}
+						<li class="selected">{{c.name}}</li>
+						{% else %}
+						<li><a href="{{ c.get_absolute_url }}">{{c.name}}</a></li>
+						{% endif %}
+						{% endfor %}
+		        		</ul>
+						</div>
+		     		</li>
+				</ul>
+					<li><a href="/contact">Обратная связь</a></li>
+					{% if auth == 1 %}
+						<li><a href="/addmem">Добавить мем</a></li>
+					{% endif %}
+					{% if auth == 1 %}
+						<li class="last"><a href="{% url 'logout' %}"> {{user.username}} Выйти</a></li>
+					{% else %}
+						<li class="last"><a href="{% url 'register' %}">Регистрация</a> | <a href="{% url 'login' %}">Войти</a></li>
+					{% endif %}
+				</div>
+			</ul>
+		</div>
